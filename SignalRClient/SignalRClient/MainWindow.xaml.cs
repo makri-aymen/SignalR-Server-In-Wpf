@@ -22,13 +22,12 @@ namespace SignalRClient
 
         public String UserName { get; set; }
         public IHubProxy HubProxy { get; set; }
-        const string ServerURI = "http://localhost:8080/signalr";
+        const string ServerURI = "http://192.168.1.225:8080";
         public HubConnection Connection { get; set; }
 
         public MainWindow()
         {
             InitializeComponent();
-            ConnectAsync();
         }
 
         private async void ConnectAsync()
@@ -87,7 +86,7 @@ namespace SignalRClient
 
         private void Connect_Button_Click(object sender, RoutedEventArgs e)
         {
-
+            ConnectAsync();
         }
     }
 }

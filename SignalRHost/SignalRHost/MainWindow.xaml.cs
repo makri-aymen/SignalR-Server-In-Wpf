@@ -5,6 +5,7 @@ using Owin;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,7 +28,7 @@ namespace SignalRHost
     {
 
         public IDisposable SignalR { get; set; }
-        const string ServerURI = "http://localhost:8080";
+        const string ServerURI = "http://192.168.1.225:8080/";
         System.Timers.Timer timer;
 
         public MainWindow()
@@ -80,17 +81,26 @@ namespace SignalRHost
         /// </summary>
         private void StartServer()
         {
-            try
-            {
-                SignalR = WebApp.Start(ServerURI);
-            }
-            catch (TargetInvocationException)
-            {
-                Console.WriteLine("A server is already running at " + ServerURI);
-                //WriteToConsole("A server is already running at " + ServerURI);
-                //this.Dispatcher.Invoke(() => ButtonStart.IsEnabled = true);
-                return;
-            }
+            //try
+            //{
+            //this olution didnt work for me
+            //HttpListener httpListener = new HttpListener();
+            //httpListener.Prefixes.Clear();
+            //httpListener.Prefixes.Add(ServerURI);
+
+            //string strCmdText;
+            //strCmdText = @"netsh http add urlacl url=http://+:8080/MyUri user=DOMAIN\user";
+            //System.Diagnostics.Process.Start("CMD.exe", strCmdText);
+
+            SignalR = WebApp.Start(ServerURI);
+            //}
+            //catch (TargetInvocationException)
+            //{
+            //    Console.WriteLine("A server is already running at " + ServerURI);
+            //    //WriteToConsole("A server is already running at " + ServerURI);
+            //    //this.Dispatcher.Invoke(() => ButtonStart.IsEnabled = true);
+            //    return;
+            //}
             Console.WriteLine("Server started at " + ServerURI);
             //this.Dispatcher.Invoke(() => ButtonStop.IsEnabled = true);
             //WriteToConsole("Server started at " + ServerURI);
@@ -109,9 +119,7 @@ namespace SignalRHost
         //    RichTextBoxConsole.AppendText(message + "\r");
         //}
     }
-    /// <summary>
-    /// Used by OWIN's startup process. 
-    /// </summary>
+
     class Startup
     {
         public void Configuration(IAppBuilder app)
@@ -120,11 +128,7 @@ namespace SignalRHost
             app.MapSignalR(); 
         }
     }
-    /// <summary>
-    /// Echoes messages sent using the Send message by calling the
-    /// addMessage method on the client. Also reports to the console
-    /// when clients connect and disconnect.
-    /// </summary>
+
     public class MyHub : Hub
     {
         public void Send(string name, string message)
@@ -142,7 +146,6 @@ namespace SignalRHost
         { 
             Console.WriteLine("One client is deconnected ------------" );
             return base.OnDisconnected(stopCalled);
-        } 
-
-    } 
+        }
+    }
 } 
